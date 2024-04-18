@@ -1,9 +1,6 @@
 package com.example.notes.passwords.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +20,8 @@ public class Password {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "userId")
-    private int userId;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User getUserId;
+
 }
