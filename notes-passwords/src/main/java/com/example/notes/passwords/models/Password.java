@@ -14,6 +14,7 @@ import lombok.Setter;
 @Table(name = "Passwords")
 public class Password {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "passwordId")
     private int passwordId;
 
@@ -22,6 +23,6 @@ public class Password {
 
     @ManyToOne
     @JoinColumn(name = "userId")
-    private User getUserId;
+    private User userId;
 
 }

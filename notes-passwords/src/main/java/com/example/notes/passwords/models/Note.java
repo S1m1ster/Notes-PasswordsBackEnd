@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Struct;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,6 +15,7 @@ import lombok.Setter;
 @Table(name = "Notes")
 public class Note {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "noteId")
     private int noteId;
 
@@ -22,5 +24,10 @@ public class Note {
 
     @ManyToOne
     @JoinColumn(name = "userId")
-    private User getUserId;
+    private User userId;
+
+    public Note(String note, User userId){
+        this.note = note;
+        this.userId = userId;
+    }
 }

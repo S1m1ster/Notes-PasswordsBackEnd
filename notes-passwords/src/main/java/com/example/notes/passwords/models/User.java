@@ -1,10 +1,7 @@
 package com.example.notes.passwords.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -16,6 +13,7 @@ import java.util.List;
 @Table(name = "Users")
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "userId")
     private int userId;
 
@@ -34,13 +32,7 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @OneToMany(mappedBy = "getUserId")
-    private List<Note> notes;
-
-    @OneToMany(mappedBy = "getUserId")
-    private List<Password> passwords;
-    public User(int userId, String userName, String firstName, String lastName, String password, String email) {
-        this.userId = userId;
+    public User(String userName, String firstName, String lastName, String password, String email) {
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
