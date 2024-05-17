@@ -25,4 +25,9 @@ public class Password {
     @JoinColumn(name = "userId")
     private User userId;
 
+    public Password(String password, User userId){
+        this.password = password;
+        this.userId = userId;
+    }
+
 }
