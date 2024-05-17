@@ -40,7 +40,7 @@ public class NoteController {
     }
 
     @DeleteMapping("/delete-note-{id}")
-    public ResponseEntity<Object>deleteNoteRequest(@PathVariable("id") int id){
+    public ResponseEntity<Object>deleteNoteByIdRequest(@PathVariable("id") int id){
         try{
             String responseMessage = "Note " + id + " has been removed.";
             ns.deleteNoteById(id);
