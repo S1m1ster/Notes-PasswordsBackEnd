@@ -1,6 +1,7 @@
 package com.example.notes.passwords.controllers;
 
 import com.example.notes.passwords.services.NoteService;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +17,16 @@ public class NoteController {
     private NoteService ns;
 
     @PostMapping("/create-note")
-    public ResponseEntity<Object> createNoteRequest(@RequestBody LinkedHashMap<String,String> body){
+    public ResponseEntity<Object> createNoteRequest(@RequestBody LinkedHashMap<String,String> body, HttpSession session){
         try{
-            int userId = Integer.parseInt(body.get("userId"));
+            if(session.getAttribute("user") == null){
+                return new ResponseEntity<>("Must be logged in.", HttpStatus.LOCKED);
+            }
+            else{
+                int userId = Integer.parseInt(body.get("userId"));
+                return new ResponseEntity<>(ns.createNote(userId, body.get("note")), HttpStatus.CREATED);
+            }
 
-            return new ResponseEntity<>(ns.createNote(userId, body.get("note")), HttpStatus.CREATED);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -29,9 +35,14 @@ public class NoteController {
     }
 
     @GetMapping("/{id}-notes")
-    public ResponseEntity<Object> getAllNotesByUserIdRequest(@PathVariable("id")int id){
+    public ResponseEntity<Object> getAllNotesByUserIdRequest(@PathVariable("id")int id, HttpSession session){
         try{
-            return new ResponseEntity<>(ns.getAllNotesByUserId(id), HttpStatus.ACCEPTED);
+            if(session.getAttribute("user") == null){
+                return new ResponseEntity<>("Must be logged in.", HttpStatus.LOCKED);
+            }
+            else{
+                return new ResponseEntity<>(ns.getAllNotesByUserId(id), HttpStatus.ACCEPTED);
+            }
         }
         catch(Exception e){
             e.printStackTrace();
@@ -40,11 +51,16 @@ public class NoteController {
     }
 
     @DeleteMapping("/delete-note-{id}")
-    public ResponseEntity<Object>deleteNoteByIdRequest(@PathVariable("id") int id){
+    public ResponseEntity<Object>deleteNoteByIdRequest(@PathVariable("id") int id, HttpSession session){
         try{
-            String responseMessage = "Note " + id + " has been removed.";
-            ns.deleteNoteById(id);
-            return new ResponseEntity<>(responseMessage, HttpStatus.ACCEPTED);
+            if(session.getAttribute("user") == null){
+                return new ResponseEntity<>("Must be logged in.", HttpStatus.LOCKED);
+            }
+            else{
+                String responseMessage = "Note " + id + " has been removed.";
+                ns.deleteNoteById(id);
+                return new ResponseEntity<>(responseMessage, HttpStatus.ACCEPTED);
+            }
         }
         catch(Exception e){
             e.printStackTrace();
@@ -53,11 +69,16 @@ public class NoteController {
     }
 
     @PutMapping("/update-note")
-    public ResponseEntity<Object>updateUserRequest(@RequestBody LinkedHashMap<String,String> body){
+    public ResponseEntity<Object>updateUserRequest(@RequestBody LinkedHashMap<String,String> body, HttpSession session){
         try{
-            int noteId = Integer.parseInt(body.get("noteId"));
+            if(session.getAttribute("user") == null){
+                return new ResponseEntity<>("Must be logged in.", HttpStatus.LOCKED);
+            }
+            else{
+                int noteId = Integer.parseInt(body.get("noteId"));
 
-            return new ResponseEntity<>(ns.updateNoteById(noteId, body.get("note")) , HttpStatus.ACCEPTED);
+                return new ResponseEntity<>(ns.updateNoteById(noteId, body.get("note")) , HttpStatus.ACCEPTED);
+            }
         }
         catch(Exception e){
             e.printStackTrace();

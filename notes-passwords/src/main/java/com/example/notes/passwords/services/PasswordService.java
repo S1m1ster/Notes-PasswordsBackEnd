@@ -1,5 +1,6 @@
 package com.example.notes.passwords.services;
 
+import com.example.notes.passwords.daos.UserPasswords;
 import com.example.notes.passwords.models.Password;
 import com.example.notes.passwords.repos.PasswordRepo;
 import com.example.notes.passwords.repos.UserRepo;
@@ -7,7 +8,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @Transactional
@@ -49,9 +52,16 @@ public class PasswordService {
         }
     }
 
-    public List<Password> getAllPasswordsOfUser(int userId){
+    public List<UserPasswords> getAllPasswordsOfUser(int userId){
         try{
-            return pr.findAllPasswordsByUserId(ur.findByUserId(userId));
+            AtomicInteger i= new AtomicInteger();
+
+            List<UserPasswords> found = new ArrayList<>();
+            pr.findAllPasswordsByUserId(ur.findByUserId(userId)).forEach(password -> {
+                found.add(Integer.parseInt(String.valueOf(i)), new UserPasswords(password.getPasswordId(), password.getPassword()));
+                i.getAndIncrement();
+            });
+            return found;
         }
         catch(Exception e){
             System.out.println("Cannot delete passwords of User: " + userId);
