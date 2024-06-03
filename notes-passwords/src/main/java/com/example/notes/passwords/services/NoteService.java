@@ -1,5 +1,7 @@
 package com.example.notes.passwords.services;
 
+import com.example.notes.passwords.daos.UserNotes;
+import com.example.notes.passwords.daos.UserPasswords;
 import com.example.notes.passwords.models.Note;
 import com.example.notes.passwords.repos.NoteRepo;
 import com.example.notes.passwords.repos.UserRepo;
@@ -7,7 +9,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @Transactional
@@ -27,9 +31,17 @@ public class NoteService {
         }
     }
 
-    public List<Note> getAllNotesByUserId(int userId){
+    public List<UserNotes> getAllNotesByUserId(int userId){
         try{
-            return nr.findAllNotesByUserId(ur.findByUserId(userId));
+           nr.findAllNotesByUserId(ur.findByUserId(userId));
+            AtomicInteger i= new AtomicInteger();
+
+            List<UserNotes> found = new ArrayList<>();
+            nr.findAllNotesByUserId(ur.findByUserId(userId)).forEach(note -> {
+                found.add(Integer.parseInt(String.valueOf(i)), new UserNotes(note.getNoteId(), note.getNote()));
+                i.getAndIncrement();
+            });
+            return found;
         }
         catch(NullPointerException e){
             e.printStackTrace();

@@ -36,4 +36,11 @@ public class UserService {
         ur.deleteById(String.valueOf(id));
     }
 
+    public User loginUser(String userName, String password){
+        return ur.findByUserNameAndPassword(userName, password);
+    }
+    public void logout(){
+
+    }
+
 }
